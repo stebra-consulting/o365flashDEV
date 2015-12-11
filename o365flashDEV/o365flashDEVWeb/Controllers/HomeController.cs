@@ -4,40 +4,72 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using o365flashDEVWeb.Models;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.Azure;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace o365flashDEVWeb.Controllers
 {
     public class HomeController : Controller
     {
-        [SharePointContextFilter]
+
         public ActionResult Index()
         {
-            User spUser = null;
 
-            var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
+            //SPManager.CurrentHttpContext = HttpContext;
+            //ListItemCollection items = SPManager.GetItemCollection("Nyhetslista");
 
-            using (var clientContext = spContext.CreateUserClientContextForSPHost())
-            {
-                if (clientContext != null)
-                {
-                    spUser = clientContext.Web.CurrentUser;
+            //string FileLeafRef = "peter_okt.jpg";
+            //using (var fileStream = SPManager.GetImage(FileLeafRef))
+            //{
 
-                    clientContext.Load(spUser, user => user.Title);
-
-                    clientContext.ExecuteQuery();
-
-                    ViewBag.UserName = spUser.Title;
-                }
-            }
+            //    AzureManager.CreateBlob(fileStream, "ImageFromStream");
+            //}
 
             return View();
+        }
+        [SharePointContextFilter]
+        public ActionResult Publish()
+        {//catch Ribbon action URL Parametr
+            var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
+            if (spContext != null)
+            {
+                string listGuid = Request.QueryString["SPListId"];
+
+                SPManager.CurrentHttpContext = HttpContext;
+                ListItemCollection items = SPManager.GetItemsFromGuid(listGuid);
+
+                List<ListItem> stebraList = new List<ListItem>();
+
+                foreach (ListItem item in items)
+                {
+                    ListItem scannedItem = StringScanner.ScanningListItem(item);
+                    stebraList.Add(scannedItem);
+                }
+
+                AzureManager.CreateTable(stebraList);
+                ViewBag.Status = "Success. Newslist have been published to: " + AzureManager.tableName + " in Azure Storage";
+            }
+
+            else
+            {
+                ViewBag.Status = "Too many requests in queue. Please try again later.";
+            }
+
+            //done
+
+
+            return View();
+
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            //not yet implemented
+            //IEnumerable<StebraEntity> news = AzureTableManager.LoadAllNews();
 
-            return View();
+            return View();//news
         }
 
         public ActionResult Contact()
