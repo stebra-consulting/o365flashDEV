@@ -25,7 +25,7 @@
       </CommandUIDefinitions>
       <CommandUIHandlers>
         <CommandUIHandler Command="Invoke_DEVPublishButtonButtonRequest"
-                          CommandAction="~remoteAppUrl/Publish/?{StandardTokens}&amp;SPListItemId={SelectedItemId}&amp;SPListId={SelectedListId}"/>
+                          CommandAction="~remoteAppUrl/Home/Publish?{StandardTokens}&amp;SPListItemId={SelectedItemId}&amp;SPListId={SelectedListId}"/>
       </CommandUIHandlers>
     </CommandUIExtension >
   </CustomAction>
