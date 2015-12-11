@@ -46,6 +46,9 @@
     <Content Include="AppIcon.png">
       <OpcRelationship>manifest-icon</OpcRelationship>
     </Content>
+    <Content Include="DEVPublishButton\Elements.xml">
+      <OpcRelationship>feature-elementmanifest</OpcRelationship>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <AppManifestFile Include="AppManifest.xml">
@@ -65,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="DEVPublishButton\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{2cd37750-28bf-4aed-945d-5650b87db2d2}</SharePointProjectItemId>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
