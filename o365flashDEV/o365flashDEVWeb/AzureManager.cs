@@ -15,7 +15,7 @@ namespace o365flashDEVWeb
     {
         //Config
         const string containerName = "photos";
-        public const string tableName = "stebraNyhetslist";
+        public const string tableName = "stebraNyhetslistDEV";
 
         //Connection to Azure Storage
         private static CloudStorageAccount StorageAccount = CloudStorageAccount.Parse(
