@@ -45,8 +45,11 @@ namespace o365flashDEVWeb.Controllers
                 foreach (ListItem item in items)
                 {
                     ListItem scannedItem = StringScanner.ScanningListItem(item);
+                    SPManager.ToSocialMedia(scannedItem);
                     stebraList.Add(scannedItem);
                 }
+
+               
 
                 AzureManager.CreateTable(stebraList);
                 ViewBag.Status = "Success. Newslist have been published to: " + AzureManager.tableName + " in Azure Storage";
