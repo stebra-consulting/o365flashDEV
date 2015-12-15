@@ -109,6 +109,12 @@ namespace o365flashDEVWeb
 
                     clientContext.ExecuteQuery();
 
+                    if (photoCollection.LongCount() == 0)
+                    {
+                        //the image is public
+                        return null;
+                    }
+
                     ListItem item = photoCollection.ElementAt(0);
 
                     File file = item.File;

@@ -39,13 +39,20 @@ namespace o365flashDEVWeb
                     string[] partsOfUrl = url.Split('/');                    //splits the url in to pieces example from sites/sd1/ = sites, sd1...
                     string fileName = partsOfUrl[partsOfUrl.Length - 1];     //last part of the url = filename 
 
-                    System.IO.Stream importedFile = SPManager.ImportImage(fileName);   //return a file when throwing in filename into SPManager
+                    //return a file when throwing in filename into SPManager
+                    //returns null when image is www/public
+                    System.IO.Stream importedFile = SPManager.ImportImage(fileName);   
 
-                    string azureUrl = AzureManager.ExportImage(importedFile, fileName);     //return a url when throwing in a file into AzureManager
-                    if (azureUrl != null)
+                    if (importedFile != null) //dont azure when www/public
                     {
-                        newColumn = ReplaceURLInColumn(url, azureUrl, newColumn);
+                        string azureUrl = AzureManager.ExportImage(importedFile, fileName);
+                        //return a url when throwing in a file into AzureManager
+                        if (azureUrl != null)
+                        {
+                            newColumn = ReplaceURLInColumn(url, azureUrl, newColumn);
+                        }
                     }
+
                 }
             }
             return newColumn;

@@ -20,6 +20,7 @@ namespace o365flashDEVWeb.Models
             this.Description = NewsDescription;
             this.Article = NewsArticle;
             this.Body = NewsBody;
+            this.Image = "none";
 
             //removing hours from datestamp
             DateTime dateWithHours = Convert.ToDateTime(NewsDate); // 3/13/2015 7:00:00 AM
@@ -47,11 +48,19 @@ namespace o365flashDEVWeb.Models
 
         }
 
+        public void firstImage(string imageUrl) {
+
+            if (this.Image == "none") {
+                this.Image = imageUrl;
+            }
+        }
+            
         public string Description { get; set; }
         public string Article { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
         public string Date { get; set; }
         public int IntDate { get; set; }
+        public string Image { get; set; }
     }
 }
