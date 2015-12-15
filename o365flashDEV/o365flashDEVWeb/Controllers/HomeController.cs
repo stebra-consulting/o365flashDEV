@@ -40,13 +40,24 @@ namespace o365flashDEVWeb.Controllers
                 SPManager.CurrentHttpContext = HttpContext;
                 ListItemCollection items = SPManager.GetItemsFromGuid(listGuid);
 
-                List<ListItem> stebraList = new List<ListItem>();
+                List<StebraEntity> stebraList = new List<StebraEntity>();
 
                 foreach (ListItem item in items)
                 {
                     ListItem scannedItem = StringScanner.ScanningListItem(item);
-                    SPManager.ToSocialMedia(scannedItem);
-                    stebraList.Add(scannedItem);
+
+                    var entity = new StebraEntity(
+                        "Nyhet",                    //string Stebratype this is partitionKey
+                        scannedItem["Title"].ToString(),   //string newsEntry this will be used as rowKey
+                        "Descriptive text",         //string NewsDescription
+                        scannedItem["Article"].ToString(), //string NewsArticle
+                        scannedItem["Datum"].ToString(),   //string NewsDate
+                        scannedItem["Body"].ToString(),     //string NewsBody
+                        (int)scannedItem["ID"]
+                        );
+
+                    SPManager.ToSocialMedia(entity);
+                    stebraList.Add(entity);
                 }
 
                

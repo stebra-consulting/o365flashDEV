@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web;
+using o365flashDEVWeb.Models;
 
 namespace o365flashDEVWeb
 {
@@ -138,7 +139,7 @@ namespace o365flashDEVWeb
 
         }
 
-        public static void ToSocialMedia(ListItem scannedItem)
+        public static void ToSocialMedia(StebraEntity entity)
         {
             //ListItemCollection items = null;
             var spContext = SharePointContextProvider.Current.GetSharePointContext(CurrentHttpContext);
@@ -162,7 +163,11 @@ namespace o365flashDEVWeb
                     //                            </Query>
                     //                        </View>";
                     //    items = list.GetItems(camlQuery);
-                    ListItem item = scannedItem;
+
+                    List list = clientContext.Web.Lists.GetByTitle("Nyhetslista");
+
+                    ListItem item = list.GetItemById(entity.SPListItemID);
+
                     clientContext.Load(item);
                     clientContext.ExecuteQuery();
                     //List<ListItem> linkedInItems = new List<ListItem>();
@@ -170,57 +175,63 @@ namespace o365flashDEVWeb
                     //{
 
                     var publiceradArray = (string[])(item["Publicerad"]);
-                    bool publicerad = publiceradArray.Contains("Publicerad till Linkedin");
 
-                    var publiceraArray = (string[])(item["Publicera"]);
-                    bool publicera = publiceraArray.Contains("Publicera till Linkedin");
+                    if (publiceradArray != null)
+                    { 
+                        bool publicerad = publiceradArray.Contains("Publicerad till Linkedin");
 
-                    if (publicerad == false && publicera == true)
-                    {
+                        var publiceraArray = (string[])(item["Publicera"]);
+                        bool publicera = publiceraArray.Contains("Publicera till Linkedin");
 
-
-                        //publicera till linkedin med bild, title, och länk
-
-                        string title = item["Title"].ToString();
-
-                        string link = "http://newsflashon.azurewebsites.net/Home/Nyheter/" + UrlManager.MakeURLFriendly(title);
-
-                        string bodyAndArticle = item["Body"].ToString() + item["Article"].ToString();
-
-                        string imgUrl = firstImage(bodyAndArticle);
-
-                        bool PostBool = SocialMediaManager.PostToLinkedIn(title, link, imgUrl);
-                        var newPub = new string[3];
-                        //change status of publicerad to publicerad till linkedin
-                        if (publiceradArray.Contains("Inte Publicerad"))
+                        if (publicerad == false && publicera == true)
                         {
-                            newPub = new[] { ("Publicerad till Linkedin") };
-                        }
-                        else
-                        {
-                            string mynewstring = "";
-                            foreach (string choice in publiceradArray)
+
+
+                            //publicera till linkedin med bild, title, och länk
+
+                            string title = item["Title"].ToString();
+
+                            string link = "http://newsflashon.azurewebsites.net/Home/Nyheter/" + UrlManager.MakeURLFriendly(title);
+
+                            string bodyAndArticle = item["Body"].ToString() + item["Article"].ToString();
+
+                            string imgUrl = firstImage(bodyAndArticle);
+
+                            imgUrl = entity.Image;
+
+                            bool PostBool = SocialMediaManager.PostToLinkedIn(title, link, imgUrl);
+                            var newPub = new string[3];
+                            //change status of publicerad to publicerad till linkedin
+                            if (publiceradArray.Contains("Inte Publicerad"))
                             {
-                                mynewstring += choice + ",";
+                                newPub = new[] { ("Publicerad till Linkedin") };
                             }
-                            mynewstring = mynewstring + "Publicerad till Linkedin";
-                            newPub = mynewstring.Split(',');
+                            else
+                            {
+                                string mynewstring = "";
+                                foreach (string choice in publiceradArray)
+                                {
+                                    mynewstring += choice + ",";
+                                }
+                                mynewstring = mynewstring + "Publicerad till Linkedin";
+                                newPub = mynewstring.Split(',');
+                            }
+
+                            item["Publicerad"] = newPub;
+                            item.Update();
                         }
 
-                        item["Publicerad"] = newPub;
-                        item.Update();
-                    }
 
-
-                    //}
-                    clientContext.ExecuteQuery();
+                        //}
+                        clientContext.ExecuteQuery();
                 }
+            }
             }
 
 
         }
 
-        public string firstImage(string bodyAndArticle)
+        public static string firstImage(string bodyAndArticle)
         {
             string imgUrl = "";
             if (imgUrl == "none")

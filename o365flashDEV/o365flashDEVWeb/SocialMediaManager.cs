@@ -6,7 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Script.Serialization;
 
-namespace WriteToLinkedin1Web
+namespace o365flashDEVWeb
 {
     public static class SocialMediaManager
     {

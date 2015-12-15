@@ -11,7 +11,7 @@ namespace o365flashDEVWeb.Models
         public StebraEntity()
         { }
         public StebraEntity(string StebraType, string NewsEntry,
-            string NewsDescription, string NewsArticle, string NewsDate, string NewsBody)
+            string NewsDescription, string NewsArticle, string NewsDate, string NewsBody, int sPListItemID)
         {
             //hold properties that mirrors listitem-columns
             this.PartitionKey = StebraType;
@@ -21,6 +21,7 @@ namespace o365flashDEVWeb.Models
             this.Article = NewsArticle;
             this.Body = NewsBody;
             this.Image = "none";
+            this.SPListItemID = sPListItemID;
 
             //removing hours from datestamp
             DateTime dateWithHours = Convert.ToDateTime(NewsDate); // 3/13/2015 7:00:00 AM
@@ -46,7 +47,7 @@ namespace o365flashDEVWeb.Models
             int yyyymmdd = int.Parse(yyyy + mm + dd);
             this.IntDate = yyyymmdd;//int Date property as yyyymmdd for sort/query against list of this object
 
-            firstImage(Body+Article);
+            firstImage(Body + Article);
 
         }
 
@@ -62,12 +63,12 @@ namespace o365flashDEVWeb.Models
                     {
                         string[] partsOfSrc = part.Split('"');
                         this.Image = partsOfSrc[1];
-                        break;     
+                        break;
                     }
                 }
             }
         }
-            
+
         public string Description { get; set; }
         public string Article { get; set; }
         public string Title { get; set; }
@@ -75,5 +76,6 @@ namespace o365flashDEVWeb.Models
         public string Date { get; set; }
         public int IntDate { get; set; }
         public string Image { get; set; }
+        public int SPListItemID { get; set; }
     }
 }

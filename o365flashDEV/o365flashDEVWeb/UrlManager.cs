@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace ExternalWebsite2
+namespace o365flashDEVWeb
 {
     public class UrlManager
     {
