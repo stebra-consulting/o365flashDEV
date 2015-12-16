@@ -56,11 +56,13 @@ namespace o365flashDEVWeb.Controllers
                         (int)scannedItem["ID"]
                         );
 
-                    SPManager.ToSocialMedia(entity);
+                    
                     stebraList.Add(entity);
                 }
 
-               
+                SPManager.ToSocialMedia(stebraList);
+
+
 
                 AzureManager.CreateTable(stebraList);
                 ViewBag.Status = "Success. Newslist have been published to: " + AzureManager.tableName + " in Azure Storage";
