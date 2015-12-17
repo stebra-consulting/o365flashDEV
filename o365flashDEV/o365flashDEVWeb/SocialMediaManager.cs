@@ -12,6 +12,13 @@ namespace o365flashDEVWeb
     {
         public static bool PostToLinkedIn(string title, string submittedUrl, string submittedImageUrl)
         {
+
+            //Quickfix illegal chars
+            title = title.Replace("å", "a");
+            title = title.Replace("ä", "a");
+            title = title.Replace("ö", "o");
+            //Quickfix illegal chars""
+
             string linkedinSharesEndPoint = "https://api.linkedin.com/v1/companies/10355329/shares?oauth2_access_token={0}";
 
             string accessToken = "AQWVdIHVNPUnyLHE4mqsGgcoJnauh0ChrATeq7iesnW4WrABtQC_2vRE2o6i3NBd61Zj1BST8yX2xuTyaFs33o07T - 9OmVEVeLiRWIj3xQ - 6JBzMsYJW9D45Uq2safJJJhBSKVDjoqKGFRnda0W5TZ6qEClnA2iaONmIACBmF - cpRKsvtn8&format=json HTTP / 1.1";//"AQVfZEE04LluteLtvO06zY91Olv3RZIEjOS9FR4Ue93HimNhm_uj3mvhvoCUrOFDvxFp5S2HIibGDq0Ls4_ljeDW1z387O413uJbMuYCtnrV - 2fxF2C_POu55FZaB5qDtiIPncqxAIrXuEcF8BRJiexHOuLYwDlPGHOUcLSYtNUl0sE7Kw0&format=json HTTP/1.1";
@@ -49,7 +56,7 @@ namespace o365flashDEVWeb
 
             catch (WebException e)
             { //breakpoint here to troubleshoot 'e' object.
-
+                //e.g 400 Bad Request
             }
 
 
