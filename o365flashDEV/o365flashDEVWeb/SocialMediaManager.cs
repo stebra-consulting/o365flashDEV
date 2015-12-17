@@ -13,11 +13,10 @@ namespace o365flashDEVWeb
         public static bool PostToLinkedIn(string title, string submittedUrl, string submittedImageUrl)
         {
 
-            //Quickfix illegal chars
-            title = title.Replace("å", "a");
-            title = title.Replace("ä", "a");
-            title = title.Replace("ö", "o");
-            //Quickfix illegal chars""
+            //Quickfix illegal chars "åäö" to htmlencoding
+            title = title.Replace("å", "&aring;");
+            title = title.Replace("ä", "&auml;");
+            title = title.Replace("ö", "&ouml;");
 
             string linkedinSharesEndPoint = "https://api.linkedin.com/v1/companies/10355329/shares?oauth2_access_token={0}";
 
