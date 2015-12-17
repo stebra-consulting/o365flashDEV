@@ -40,7 +40,19 @@ namespace o365flashDEVWeb
         { "x-li-format", "json" }
     };
             client.Headers.Add(requestHeaders);
-            var responseJson = client.UploadString(requestUrl, "POST", requestJson);
+
+            var responseJson = "";
+            try
+            {
+                responseJson = client.UploadString(requestUrl, "POST", requestJson);
+            }
+
+            catch (WebException e)
+            { //breakpoint here to troubleshoot 'e' object.
+
+            }
+
+
             var response = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(responseJson);
             return response.ContainsKey("updateKey");
         }
