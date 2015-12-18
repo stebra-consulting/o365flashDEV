@@ -15,17 +15,20 @@ namespace o365flashDEVWeb
 
             //Quickfix illegal chars "åäö" to htmlencoding
             title = title.Replace("å", "&aring;");
+            title = title.Replace("Å", "&Aring;");
             title = title.Replace("ä", "&auml;");
+            title = title.Replace("Ä", "&Auml;");
             title = title.Replace("ö", "&ouml;");
+            title = title.Replace("Ö", "&Ouml;");
 
             string linkedinSharesEndPoint = "https://api.linkedin.com/v1/companies/10355329/shares?oauth2_access_token={0}";
 
-            string accessToken = "AQWVdIHVNPUnyLHE4mqsGgcoJnauh0ChrATeq7iesnW4WrABtQC_2vRE2o6i3NBd61Zj1BST8yX2xuTyaFs33o07T - 9OmVEVeLiRWIj3xQ - 6JBzMsYJW9D45Uq2safJJJhBSKVDjoqKGFRnda0W5TZ6qEClnA2iaONmIACBmF - cpRKsvtn8&format=json HTTP / 1.1";//"AQVfZEE04LluteLtvO06zY91Olv3RZIEjOS9FR4Ue93HimNhm_uj3mvhvoCUrOFDvxFp5S2HIibGDq0Ls4_ljeDW1z387O413uJbMuYCtnrV - 2fxF2C_POu55FZaB5qDtiIPncqxAIrXuEcF8BRJiexHOuLYwDlPGHOUcLSYtNUl0sE7Kw0&format=json HTTP/1.1";
+            string accessToken = "AQXmrLhp2cUsaax3QtHE7k5YtSxMgyTAhzba-5aFYvREhVp7kvm4FxfkWVM_0_EFGGeZk6GryWDqCGdHbEnDfxSnuqschsQnGE5VSWYRi67rkLm-yhnpJSJXGdPhP6pp2k6VU5x6FZiK75E4u08RedrBcnyL61mF6Rubf6G7mQcSb10CFcQ&format=json HTTP / 1.1";
 
             var requestUrl = String.Format(linkedinSharesEndPoint, accessToken);
             var message = new
             {
-                comment = "Testing out the posting on LinkedIn",
+                comment = "Apputveckling",
                 content = new Dictionary<string, string>
         { { "title", title },
             { "submitted-url", submittedUrl },
