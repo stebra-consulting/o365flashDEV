@@ -137,5 +137,18 @@ namespace o365flashDEVWeb
                 return "";
             }
         }
+        public static string ConvertSpecialCharacters(string text)
+        {
+
+            //Quickfix illegal chars "åäö" to htmlencoding
+            text = text.Replace("å", "&aring;");
+            text = text.Replace("Å", "&Aring;");
+            text = text.Replace("ä", "&auml;");
+            text = text.Replace("Ä", "&Auml;");
+            text = text.Replace("ö", "&ouml;");
+            text = text.Replace("Ö", "&Ouml;");
+
+            return text;
+        }
     }
 }
