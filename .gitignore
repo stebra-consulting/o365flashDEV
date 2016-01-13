@@ -3,12 +3,7 @@
 
 #Custom Section
 
-o365flashDEV\o365flashDEV\o365flashDEVWeb
-*.config
 
-o365flashDEV\o365flashDEV\o365flashDEVWeb
-bin/
-obj/
 
 # User-specific files
 *.suo
