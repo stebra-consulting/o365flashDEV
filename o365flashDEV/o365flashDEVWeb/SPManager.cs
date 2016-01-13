@@ -146,11 +146,9 @@ namespace o365flashDEVWeb
 
             //var spContext = SharePointContextProvider.Current.GetSharePointContext(CurrentHttpContext);
 
-            if (cachedSpContext == null)
-            {
-                cachedSpContext = SharePointContextProvider.Current.GetSharePointContext(CurrentHttpContext);
-            }
-
+            if (cachedSpContext == null) { cachedSpContext = SharePointContextProvider.Current.GetSharePointContext(CurrentHttpContext); goto Start; }
+            else goto Skip;
+            Start:
             using (var clientContext = cachedSpContext.CreateUserClientContextForSPHost())
             {
                 if (clientContext != null)
@@ -203,30 +201,45 @@ namespace o365flashDEVWeb
 
                                         string imgUrl = entity.Image;
 
-                                        //post to linkedIn
-                                        bool postSuccess = SocialMediaManager.PostToLinkedIn(title, link, imgUrl);
-
-                                        //change status of publicerad to publicerad till linkedin
-                                        if (postSuccess)
+                                        title = UrlManager.ConvertSpecialCharacters(title);
+                                        bool postSuccess;
+                                        try
                                         {
-                                            var newPub = new string[3];
-                                            if (publiceradArray.Contains("Inte Publicerad"))
-                                            {
-                                                newPub = new[] { ("Publicerad till Linkedin") };
-                                            }
-                                            else
-                                            {
-                                                string mynewstring = "";
-                                                foreach (string choice in publiceradArray)
-                                                {
-                                                    mynewstring += choice + ",";
-                                                }
-                                                mynewstring = mynewstring + "Publicerad till Linkedin";
-                                                newPub = mynewstring.Split(',');
-                                            }
+                                            //post to linkedIn
+                                            postSuccess = SocialMediaManager.PostToLinkedIn(title, link, imgUrl);
+                                        }
+                                        catch (Exception)
+                                        {
 
-                                            item["Publicerad"] = newPub;
-                                            item.Update();
+                                            throw;
+                                        }
+                                        finally
+                                        {
+#if DEBUG
+                                            postSuccess = false;
+#endif
+                                            //change status of publicerad to publicerad till linkedin
+                                            if (postSuccess)
+                                            {
+                                                var newPub = new string[3];
+                                                if (publiceradArray.Contains("Inte Publicerad"))
+                                                {
+                                                    newPub = new[] { ("Publicerad till Linkedin") };
+                                                }
+                                                else if (!publiceradArray.Contains("Publicerad till Linkedin"))
+                                                {
+                                                    string mynewstring = "";
+                                                    foreach (string choice in publiceradArray)
+                                                    {
+                                                        mynewstring += choice + ",";
+                                                    }
+                                                    mynewstring = mynewstring + "Publicerad till Linkedin";
+                                                    newPub = mynewstring.Split(',');
+                                                }
+
+                                                item["Publicerad"] = newPub;
+                                                item.Update();
+                                            }
                                         }
                                     }
 
@@ -237,8 +250,8 @@ namespace o365flashDEVWeb
                     }
                 }
             }
-
-
+            Skip:
+            cachedSpContext = null;
         }
 
         public static string firstImage(string bodyAndArticle)

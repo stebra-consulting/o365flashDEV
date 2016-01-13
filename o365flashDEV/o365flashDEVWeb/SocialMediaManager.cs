@@ -13,9 +13,8 @@ namespace o365flashDEVWeb
         public static bool PostToLinkedIn(string title, string submittedUrl, string submittedImageUrl)
         {
 
-
-
-            string linkedinSharesEndPoint = "https://api.linkedin.com/v1/companies/10355329/shares?oauth2_access_token={0}";
+            string companyId = "10355329";
+            string linkedinSharesEndPoint = "https://api.linkedin.com/v1/companies/" + companyId + "/shares?oauth2_access_token={0}";
 
             string accessToken = "AQXmrLhp2cUsaax3QtHE7k5YtSxMgyTAhzba-5aFYvREhVp7kvm4FxfkWVM_0_EFGGeZk6GryWDqCGdHbEnDfxSnuqschsQnGE5VSWYRi67rkLm-yhnpJSJXGdPhP6pp2k6VU5x6FZiK75E4u08RedrBcnyL61mF6Rubf6G7mQcSb10CFcQ&format=json HTTP / 1.1";
 

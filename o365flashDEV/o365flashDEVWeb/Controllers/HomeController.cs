@@ -32,7 +32,12 @@ namespace o365flashDEVWeb.Controllers
         [SharePointContextFilter]
         public ActionResult Publish()
         {//catch Ribbon action URL Parametr
+
+            if (Session["Post"] != null)
+            {
+                
             var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
+            
             if (spContext != null)
             {
                 string listGuid = Request.QueryString["SPListId"];
@@ -73,8 +78,12 @@ namespace o365flashDEVWeb.Controllers
                 ViewBag.Status = "Too many requests in queue. Please try again later.";
             }
 
-            //done
-
+                //done
+            }
+            else if (Request.QueryString["SPHostUrl"] != null && Session["SPUrl"] == null)
+            {
+                Session["SPUrl"] = Request.Url.ToString();
+            }
 
             return View();
 
