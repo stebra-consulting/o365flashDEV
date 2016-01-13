@@ -33,7 +33,22 @@ namespace o365flashDEVWeb.Controllers
         public ActionResult Publish()
         {//catch Ribbon action URL Parametr
 
-            if (Session["Post"] != null)
+            if (Request.QueryString["SPHostUrl"] != null && Session["SPUrl"] == null)
+            {
+                Session["SPUrl"] = Request.Url.ToString();
+            }
+            if (Request.QueryString["publish"] == "1")
+            {
+                SocialMediaManager.loginToFacebook();
+            }
+            if (Request.QueryString["publish"] == "2")
+            {
+                Session["SocialMedia"] = "Linkedin";
+                string url = Session["SPUrl"].ToString();
+                Response.Redirect(url);
+            }
+
+            if (Session["ExternalWeb"] != null || Session["SocialMedia"] != null)
             {
                 
             var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
@@ -65,13 +80,35 @@ namespace o365flashDEVWeb.Controllers
                     stebraList.Add(entity);
                 }
 
-                SPManager.ToSocialMedia(stebraList);
 
+                if (Session["SocialMedia"] != null)
+                {
+                        SPManager.CurrentHttpContext = HttpContext;
+                        string socialMediaName = Session["SocialMedia"].ToString();
 
+                        if (socialMediaName == "Facebook" && Session["AccessToken"] != null)
+                        {
+                            SPManager.ToSocialMedia(stebraList, socialMediaName);
+                            Session["Facebook"] = "√";
+                            Session["AccessToken"] = null;
+                        }
 
-                AzureManager.CreateTable(stebraList);
-                ViewBag.Status = "Success. Newslist have been published to: " + AzureManager.tableName + " in Azure Storage";
-            }
+                        else if (socialMediaName == "Linkedin")
+                        {
+                            SPManager.ToSocialMedia(stebraList, socialMediaName);
+                            Session["LinkedIn"] = "√";
+                        }
+                        
+                    Session["SocialMedia"] = null;
+                }
+
+                if (Session["ExternalWeb"] != null)
+                {
+                    AzureManager.CreateTable(stebraList);
+                    ViewBag.Status = "Success. Newslist have been published to: " + AzureManager.tableName + " in Azure Storage";
+                }
+
+                }
 
             else
             {
@@ -80,15 +117,25 @@ namespace o365flashDEVWeb.Controllers
 
                 //done
             }
-            else if (Request.QueryString["SPHostUrl"] != null && Session["SPUrl"] == null)
-            {
-                Session["SPUrl"] = Request.Url.ToString();
-            }
 
+            ViewBag.Facebook = Session["Facebook"];
+            ViewBag.LinkedIn = Session["LinkedIn"];
+            
             return View();
 
         }
+        public ActionResult Redirect()
+        {
 
+            if (Request.QueryString["code"] != null)
+            {
+                SocialMediaManager.getAccessToken();
+                Session["SocialMedia"] = "Facebook";
+            }
+            string url = Session["SPUrl"].ToString();
+            Response.Redirect(url);
+            return View("Publish");
+        }
         public ActionResult About()
         {
             //not yet implemented

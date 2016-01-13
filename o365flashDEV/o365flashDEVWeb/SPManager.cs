@@ -140,7 +140,7 @@ namespace o365flashDEVWeb
 
         }
 
-        public static void ToSocialMedia(List<StebraEntity> stebraList)
+        public static void ToSocialMedia(List<StebraEntity> stebraList, string socialMediaName)
         {
             //ListItemCollection items = null;
 
@@ -187,10 +187,10 @@ namespace o365flashDEVWeb
 
                                 if (publiceradArray != null)
                                 {
-                                    bool publicerad = publiceradArray.Contains("Publicerad till Linkedin");
+                                    bool publicerad = publiceradArray.Contains("Publicerad till " + socialMediaName);
 
                                     var publiceraArray = (string[])(item["Publicera"]);
-                                    bool publicera = publiceraArray.Contains("Publicera till Linkedin");
+                                    bool publicera = publiceraArray.Contains("Publicera till " + socialMediaName);
 
                                     if (publicerad == false && publicera == true)
                                     {
@@ -201,12 +201,17 @@ namespace o365flashDEVWeb
 
                                         string imgUrl = entity.Image;
 
-                                        title = UrlManager.ConvertSpecialCharacters(title);
                                         bool postSuccess;
                                         try
                                         {
-                                            //post to linkedIn
-                                            postSuccess = SocialMediaManager.PostToLinkedIn(title, link, imgUrl);
+                                            if (socialMediaName == "Facebook")
+                                            {
+                                                postSuccess = SocialMediaManager.postToFacebook(title, link, imgUrl);
+                                            }
+                                            if (socialMediaName == "Linkedin")
+                                            {
+                                                postSuccess = SocialMediaManager.PostToLinkedIn(title, link, imgUrl);
+                                            }
                                         }
                                         catch (Exception)
                                         {
@@ -224,16 +229,16 @@ namespace o365flashDEVWeb
                                                 var newPub = new string[3];
                                                 if (publiceradArray.Contains("Inte Publicerad"))
                                                 {
-                                                    newPub = new[] { ("Publicerad till Linkedin") };
+                                                    newPub = new[] { ("Publicerad till " + socialMediaName) };
                                                 }
-                                                else if (!publiceradArray.Contains("Publicerad till Linkedin"))
+                                                else if (!publiceradArray.Contains("Publicerad till " + socialMediaName))
                                                 {
                                                     string mynewstring = "";
                                                     foreach (string choice in publiceradArray)
                                                     {
                                                         mynewstring += choice + ",";
                                                     }
-                                                    mynewstring = mynewstring + "Publicerad till Linkedin";
+                                                    mynewstring = mynewstring + "Publicerad till " + socialMediaName;
                                                     newPub = mynewstring.Split(',');
                                                 }
 
