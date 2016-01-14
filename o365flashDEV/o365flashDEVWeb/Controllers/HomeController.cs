@@ -27,6 +27,8 @@ namespace o365flashDEVWeb.Controllers
             //    AzureManager.CreateBlob(fileStream, "ImageFromStream");
             //}
 
+            //modified
+
             return View();
         }
         [SharePointContextFilter]
