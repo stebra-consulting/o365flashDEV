@@ -27,7 +27,7 @@ namespace o365flashDEVWeb.Controllers
             //    AzureManager.CreateBlob(fileStream, "ImageFromStream");
             //}
 
-            //modified
+            //mod*
 
             return View();
         }
