@@ -42,6 +42,8 @@ namespace o365flashDEVWeb.Controllers
             if (Request.QueryString["publish"] == "0")//publish data to Azure storage
             {
                 Session["ExternalWeb"] = "thisStringIsNotNull";
+                string url = Session["SPUrl"].ToString();
+                Response.Redirect(url);
             }
             if (Request.QueryString["publish"] == "1")
             {
@@ -56,39 +58,39 @@ namespace o365flashDEVWeb.Controllers
 
             if (Session["ExternalWeb"] != null || Session["SocialMedia"] != null)
             {
-                
-            var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
-            
-            if (spContext != null)
-            {
-                string listGuid = Request.QueryString["SPListId"];
 
-                SPManager.CurrentHttpContext = HttpContext;
-                ListItemCollection items = SPManager.GetItemsFromGuid(listGuid);
+                var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
 
-                List<StebraEntity> stebraList = new List<StebraEntity>();
-
-                foreach (ListItem item in items)
+                if (spContext != null)
                 {
-                    ListItem scannedItem = StringScanner.ScanningListItem(item);
+                    string listGuid = Request.QueryString["SPListId"];
 
-                    var entity = new StebraEntity(
-                        "Nyhet",                    //string Stebratype this is partitionKey
-                        scannedItem["Title"].ToString(),   //string newsEntry this will be used as rowKey
-                        "Descriptive text",         //string NewsDescription
-                        scannedItem["Article"].ToString(), //string NewsArticle
-                        scannedItem["Datum"].ToString(),   //string NewsDate
-                        scannedItem["Body"].ToString(),     //string NewsBody
-                        (int)scannedItem["ID"]
-                        );
+                    SPManager.CurrentHttpContext = HttpContext;
+                    ListItemCollection items = SPManager.GetItemsFromGuid(listGuid);
 
-                    
-                    stebraList.Add(entity);
-                }
+                    List<StebraEntity> stebraList = new List<StebraEntity>();
+
+                    foreach (ListItem item in items)
+                    {
+                        ListItem scannedItem = StringScanner.ScanningListItem(item);
+
+                        var entity = new StebraEntity(
+                            "Nyhet",                    //string Stebratype this is partitionKey
+                            scannedItem["Title"].ToString(),   //string newsEntry this will be used as rowKey
+                            "Descriptive text",         //string NewsDescription
+                            scannedItem["Article"].ToString(), //string NewsArticle
+                            scannedItem["Datum"].ToString(),   //string NewsDate
+                            scannedItem["Body"].ToString(),     //string NewsBody
+                            (int)scannedItem["ID"]
+                            );
 
 
-                if (Session["SocialMedia"] != null)
-                {
+                        stebraList.Add(entity);
+                    }
+
+
+                    if (Session["SocialMedia"] != null)
+                    {
                         SPManager.CurrentHttpContext = HttpContext;
                         string socialMediaName = Session["SocialMedia"].ToString();
 
@@ -104,29 +106,33 @@ namespace o365flashDEVWeb.Controllers
                             SPManager.ToSocialMedia(stebraList, socialMediaName);
                             Session["LinkedIn"] = "√";
                         }
-                        
-                    Session["SocialMedia"] = null;
+
+                        Session["SocialMedia"] = null;
+                    }
+
+                    if (Session["ExternalWeb"] != null)
+                    {
+                        AzureManager.CreateTable(stebraList);
+                        ViewBag.Status = "Success. Newslist have been published to: " + AzureManager.tableName + " in Azure Storage";
+                        Session["ExternalWeb"] = null;
+
+
+                    }
                 }
 
-                if (Session["ExternalWeb"] != null)
+
+                else
                 {
-                    AzureManager.CreateTable(stebraList);
-                    ViewBag.Status = "Success. Newslist have been published to: " + AzureManager.tableName + " in Azure Storage";
+                    ViewBag.Status = "Too many requests in queue. Please try again later.";
                 }
-
-                }
-
-            else
-            {
-                ViewBag.Status = "Too many requests in queue. Please try again later.";
-            }
 
                 //done
+
             }
 
             ViewBag.Facebook = Session["Facebook"];
             ViewBag.LinkedIn = Session["LinkedIn"];
-            
+
             return View();
 
         }
