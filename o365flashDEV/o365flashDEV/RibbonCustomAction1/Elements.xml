@@ -1,30 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-  <CustomAction Id="4c4279cf-dc04-4f21-9a3b-98eb84905ef7.DEVPublishButton"
+  <CustomAction Id="8a7bb1aa-392d-4f78-b93d-031bd4e2081d.RibbonCustomAction1"
                 RegistrationType="List"
                 RegistrationId="{$ListId:Lists/Nyhetslista;}"
                 Location="CommandUI.Ribbon"
                 Sequence="10001"
-                Title="Invoke &apos;DEVPublishButton&apos; action">
+                Title="Invoke &apos;RibbonCustomAction1&apos; action">
     <CommandUIExtension>
       <!-- 
       Update the UI definitions below with the controls and the command actions
       that you want to enable for the custom action.
       -->
       <CommandUIDefinitions>
-        <CommandUIDefinition Location="Ribbon.ListItem.Actions.Controls._children">
-          <Button Id="Ribbon.ListItem.Actions.DEVPublishButtonButton"
-                  Alt="DEV PublishButton"
+        <CommandUIDefinition Location="Ribbon.List.Actions.Controls._children">
+          <Button Id="Ribbon.List.Actions.RibbonCustomAction1Button"
+                  Alt="Request RibbonCustomAction1"
                   Sequence="100"
-                  Command="Invoke_DEVPublishButtonButtonRequest"
-                  LabelText="DEV PublishButton"
+                  Command="Invoke_RibbonCustomAction1ButtonRequest"
+                  LabelText="Request RibbonCustomAction1"
                   TemplateAlias="o1"
                   Image32by32="_layouts/15/images/placeholder32x32.png"
                   Image16by16="_layouts/15/images/placeholder16x16.png" />
         </CommandUIDefinition>
       </CommandUIDefinitions>
       <CommandUIHandlers>
-        <CommandUIHandler Command="Invoke_DEVPublishButtonButtonRequest"
+        <CommandUIHandler Command="Invoke_RibbonCustomAction1ButtonRequest"
                           CommandAction="~remoteAppUrl/Home/Publish?{StandardTokens}&amp;SPListItemId={SelectedItemId}&amp;SPListId={SelectedListId}"/>
       </CommandUIHandlers>
     </CommandUIExtension >

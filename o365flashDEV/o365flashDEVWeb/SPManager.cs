@@ -201,7 +201,7 @@ namespace o365flashDEVWeb
 
                                         string imgUrl = entity.Image;
 
-                                        bool postSuccess;
+                                        bool postSuccess = false;
                                         try
                                         {
                                             if (socialMediaName == "Facebook")

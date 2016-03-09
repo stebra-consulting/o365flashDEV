@@ -39,6 +39,10 @@ namespace o365flashDEVWeb.Controllers
             {
                 Session["SPUrl"] = Request.Url.ToString();
             }
+            if (Request.QueryString["publish"] == "0")//publish data to Azure storage
+            {
+                Session["ExternalWeb"] = "thisStringIsNotNull";
+            }
             if (Request.QueryString["publish"] == "1")
             {
                 SocialMediaManager.loginToFacebook();
