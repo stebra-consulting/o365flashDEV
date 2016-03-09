@@ -34,16 +34,17 @@ namespace o365flashDEVWeb.Controllers
         [SharePointContextFilter]
         public ActionResult Publish()
         {//catch Ribbon action URL Parametr
-
+            //string listGuid = "notYetAssigned";
+            string spHostUrl;
             if (Request.QueryString["SPHostUrl"] != null && Session["SPUrl"] == null)
             {
                 Session["SPUrl"] = Request.Url.ToString();
+                Session["ListGuid"] = Request.QueryString["SPListId"];
             }
             if (Request.QueryString["publish"] == "0")//publish data to Azure storage
             {
                 Session["ExternalWeb"] = "thisStringIsNotNull";
-                string url = Session["SPUrl"].ToString();
-                Response.Redirect(url);
+                //Response.Redirect(url);
             }
             if (Request.QueryString["publish"] == "1")
             {
@@ -52,8 +53,8 @@ namespace o365flashDEVWeb.Controllers
             if (Request.QueryString["publish"] == "2")
             {
                 Session["SocialMedia"] = "Linkedin";
-                string url = Session["SPUrl"].ToString();
-                Response.Redirect(url);
+                spHostUrl = Session["SPUrl"].ToString();
+                Response.Redirect(spHostUrl);
             }
 
             if (Session["ExternalWeb"] != null || Session["SocialMedia"] != null)
@@ -63,10 +64,9 @@ namespace o365flashDEVWeb.Controllers
 
                 if (spContext != null)
                 {
-                    string listGuid = Request.QueryString["SPListId"];
 
                     SPManager.CurrentHttpContext = HttpContext;
-                    ListItemCollection items = SPManager.GetItemsFromGuid(listGuid);
+                    ListItemCollection items = SPManager.GetItemsFromGuid(Session["ListGuid"].ToString());
 
                     List<StebraEntity> stebraList = new List<StebraEntity>();
 
@@ -115,6 +115,7 @@ namespace o365flashDEVWeb.Controllers
                         AzureManager.CreateTable(stebraList);
                         ViewBag.Status = "Success. Newslist have been published to: " + AzureManager.tableName + " in Azure Storage";
                         Session["ExternalWeb"] = null;
+                        Session["Azure"] = "√";
 
 
                     }
@@ -132,6 +133,7 @@ namespace o365flashDEVWeb.Controllers
 
             ViewBag.Facebook = Session["Facebook"];
             ViewBag.LinkedIn = Session["LinkedIn"];
+            ViewBag.Azure = Session["Azure"];
 
             return View();
 
@@ -144,8 +146,8 @@ namespace o365flashDEVWeb.Controllers
                 SocialMediaManager.getAccessToken();
                 Session["SocialMedia"] = "Facebook";
             }
-            string url = Session["SPUrl"].ToString();
-            Response.Redirect(url);
+            string spHostUrl = Session["SPUrl"].ToString();
+            Response.Redirect(spHostUrl);
             return View("Publish");
         }
         public ActionResult About()
