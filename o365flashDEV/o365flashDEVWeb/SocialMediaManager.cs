@@ -11,18 +11,82 @@ namespace o365flashDEVWeb
 {
     public static class SocialMediaManager
     {
+        public static void loginToLinkedIn()
+        {
+            var oauth2_Url = "https://www.linkedin.com/uas/oauth2/";
+            var responseUrl = oauth2_Url + "authorization?response_type=code&";
+            var client_id = "client_id=77e1h1reaupexq";
+            var redirect_uri = "redirect_uri=https://o365flash.azurewebsites.net/home/linkedin";
+#if DEBUG
+            redirect_uri = "redirect_uri=https://localhost:44300/home/linkedin";
+#endif
+
+            var state = "state=234234de";
+            var scope = "scope=r_basicprofile%20r_emailaddress%20rw_company_admin%20w_share";
+            HttpContext.Current.Response.Redirect(responseUrl + client_id + "&" + redirect_uri + "&" + state + "&" + scope);
+        }
+        public static void liGetAccessToken()
+        {
+            if (HttpContext.Current.Request.QueryString["code"] != null)
+            {
+                string code = HttpContext.Current.Request.QueryString["code"].ToString();
+
+                var oauth2_Url = "https://www.linkedin.com/uas/oauth2/";
+                var responseUrl = oauth2_Url + "accessToken?";
+
+                using (WebClient client = new WebClient())
+                { 
+
+
+                    var redirect_uri = "https://o365flash.azurewebsites.net/home/linkedin";
+#if DEBUG
+                    redirect_uri = "https://localhost:44300/home/linkedin";
+#endif
+                    byte[] response =
+                    client.UploadValues(responseUrl, new NameValueCollection()
+                    {
+           { "grant_type", "authorization_code" },
+           { "code", code },
+           { "redirect_uri", redirect_uri },
+           { "client_id", "77e1h1reaupexq" },
+           { "client_secret", "XuPzNYv5zpgR99UV" }
+                    });
+
+                    var result = System.Text.Encoding.UTF8.GetString(response);
+                    //{ "access_token":"AQXod6RHyu0dNhs0lrwydK-FBF0u_wlnRNPvgAvSM1y1utBFR6xU-v_RazENrcfGcsNS8ZAg1xBZuKKoaMlx8wqV3oyHR3KIBRPwFomqRskeXsBRbIPxsP3mJnuRlJZECQYL923iGom4fYjWmdlx27B92lcd53DyLoe3fosJa0F0FQ8HZcM","expires_in":5172521}
+
+                    string[] words = result.Split('"');
+                    var token = words[3];
+                    HttpContext.Current.Session["AccessToken"] = token;
+                }
+                
+
+
+            }
+            else if (HttpContext.Current.Request.QueryString["error"] != null)
+            {
+                // Notify the user as you like
+                string error = HttpContext.Current.Request.QueryString["error"];
+                string errorResponse = HttpContext.Current.Request.QueryString["error_reason"];
+                string errorDescription = HttpContext.Current.Request.QueryString["error_description"];
+
+
+            }
+        }
+
+
         public static bool PostToLinkedIn(string title, string submittedUrl, string submittedImageUrl)
         {
 
-            string companyId = "10355329";
+            string companyId = "2414183";
             string linkedinSharesEndPoint = "https://api.linkedin.com/v1/companies/" + companyId + "/shares?oauth2_access_token={0}";
 
-            string accessToken = "AQXmrLhp2cUsaax3QtHE7k5YtSxMgyTAhzba-5aFYvREhVp7kvm4FxfkWVM_0_EFGGeZk6GryWDqCGdHbEnDfxSnuqschsQnGE5VSWYRi67rkLm-yhnpJSJXGdPhP6pp2k6VU5x6FZiK75E4u08RedrBcnyL61mF6Rubf6G7mQcSb10CFcQ&format=json HTTP / 1.1";
+            string accessToken = HttpContext.Current.Session["AccessToken"].ToString() + "&format=json HTTP / 1.1";
 
             var requestUrl = String.Format(linkedinSharesEndPoint, accessToken);
             var message = new
             {
-                comment = "Apputveckling",
+                comment = "Senaste nytt!",
                 content = new Dictionary<string, string>
         {
             { "title", title },
@@ -60,18 +124,38 @@ namespace o365flashDEVWeb
             var response = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(responseJson);
             return response.ContainsKey("updateKey");
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //FACEBOOK
         public static void loginToFacebook()
         {
+            var redirect_uri = "https://o365flash.azurewebsites.net/home/facebook";
+#if DEBUG
+            redirect_uri = "https://localhost:44300/home/facebook";
+#endif
             var fb = new FacebookClient();
             var loginUrl = fb.GetLoginUrl(new
             {
 
                 client_id = "1706235779661312",
 
-                redirect_uri = "https://o365flash.azurewebsites.net/home/redirect",
-#if debug
-                redirect_uri = "https://localhost:44300/home/redirect",
-#endif
+                redirect_uri = redirect_uri,
+
                 response_type = "code",
 
                 scope = "email,user_likes,publish_actions,manage_pages, publish_pages" // Add other permissions as needed
@@ -80,14 +164,17 @@ namespace o365flashDEVWeb
             HttpContext.Current.Response.Redirect(loginUrl.AbsoluteUri);  // User not connected, ask them to sign in again
         }
 
-        public static void getAccessToken()
+        public static void fbGetAccessToken()
         {
             if (HttpContext.Current.Request.QueryString["code"] != null)
             {
                 string accessCode = HttpContext.Current.Request.QueryString["code"].ToString();
 
                 var fb = new FacebookClient();
-
+                var redirect_uri = "https://o365flash.azurewebsites.net/home/facebook";
+#if DEBUG
+                redirect_uri = "https://localhost:44300/home/facebook";
+#endif
                 // throws OAuthException 
                 dynamic result = fb.Post("oauth/access_token", new
                 {
@@ -96,11 +183,8 @@ namespace o365flashDEVWeb
 
                     client_secret = "557e810bcb102d201f1f52d7a107785e",
 
-                    redirect_uri = "https://o365flash.azurewebsites.net/home/redirect",
-#if debug
-                    redirect_uri = "https://localhost:44300/home/redirect",
-#endif
-
+                    redirect_uri = redirect_uri,
+                    
                     code = accessCode
 
                 });

@@ -8,6 +8,8 @@ using o365flashDEVWeb.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage.Blob;
+using System.Net;
+using System.Collections.Specialized;
 
 namespace o365flashDEVWeb.Controllers
 {
@@ -35,7 +37,6 @@ namespace o365flashDEVWeb.Controllers
         public ActionResult Publish()
         {//catch Ribbon action URL Parametr
             //string listGuid = "notYetAssigned";
-            string spHostUrl;
             if (Request.QueryString["SPHostUrl"] != null && Session["SPUrl"] == null)
             {
                 Session["SPUrl"] = Request.Url.ToString();
@@ -44,7 +45,6 @@ namespace o365flashDEVWeb.Controllers
             if (Request.QueryString["publish"] == "0")//publish data to Azure storage
             {
                 Session["ExternalWeb"] = "thisStringIsNotNull";
-                //Response.Redirect(url);
             }
             if (Request.QueryString["publish"] == "1")
             {
@@ -52,9 +52,7 @@ namespace o365flashDEVWeb.Controllers
             }
             if (Request.QueryString["publish"] == "2")
             {
-                Session["SocialMedia"] = "Linkedin";
-                spHostUrl = Session["SPUrl"].ToString();
-                Response.Redirect(spHostUrl);
+                SocialMediaManager.loginToLinkedIn();
             }
 
             if (Session["ExternalWeb"] != null || Session["SocialMedia"] != null)
@@ -101,10 +99,11 @@ namespace o365flashDEVWeb.Controllers
                             Session["AccessToken"] = null;
                         }
 
-                        else if (socialMediaName == "Linkedin")
+                        else if (socialMediaName == "Linkedin" && Session["AccessToken"] != null)
                         {
                             SPManager.ToSocialMedia(stebraList, socialMediaName);
                             Session["LinkedIn"] = "√";
+                            Session["AccessToken"] = null;
                         }
 
                         Session["SocialMedia"] = null;
@@ -138,18 +137,31 @@ namespace o365flashDEVWeb.Controllers
             return View();
 
         }
-        public ActionResult Redirect()
+        public ActionResult facebook()
         {
 
             if (Request.QueryString["code"] != null)
             {
-                SocialMediaManager.getAccessToken();
+                SocialMediaManager.fbGetAccessToken();
                 Session["SocialMedia"] = "Facebook";
             }
             string spHostUrl = Session["SPUrl"].ToString();
             Response.Redirect(spHostUrl);
             return View("Publish");
         }
+        public ActionResult linkedin()
+        {
+            if (Request.QueryString["code"] != null)
+            {
+                SocialMediaManager.liGetAccessToken();
+                Session["SocialMedia"] = "Linkedin";
+            }
+
+            string spHostUrl = Session["SPUrl"].ToString();
+            Response.Redirect(spHostUrl);
+            return View("Publish");
+        }
+
         public ActionResult About()
         {
             //not yet implemented

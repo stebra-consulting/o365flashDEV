@@ -213,10 +213,10 @@ namespace o365flashDEVWeb
                                                 postSuccess = SocialMediaManager.PostToLinkedIn(title, link, imgUrl);
                                             }
                                         }
-                                        catch (Exception)
+                                        catch (Exception e)
                                         {
-
-                                            throw;
+                                            string msg = e.Message;
+                                            
                                         }
                                         finally
                                         {
