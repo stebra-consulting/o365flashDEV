@@ -24,7 +24,8 @@ namespace o365flashDEVWeb
             {
                 comment = "Apputveckling",
                 content = new Dictionary<string, string>
-        { { "title", title },
+        {
+            { "title", title },
             { "submitted-url", submittedUrl },
             {"submitted-image-url" , submittedImageUrl}
         },
@@ -65,10 +66,12 @@ namespace o365flashDEVWeb
             var loginUrl = fb.GetLoginUrl(new
             {
 
-                client_id = "1734189983463496",
+                client_id = "1706235779661312",
 
+                redirect_uri = "https://o365flash.azurewebsites.net/home/redirect",
+#if debug
                 redirect_uri = "https://localhost:44300/home/redirect",
-
+#endif
                 response_type = "code",
 
                 scope = "email,user_likes,publish_actions,manage_pages, publish_pages" // Add other permissions as needed
@@ -89,11 +92,14 @@ namespace o365flashDEVWeb
                 dynamic result = fb.Post("oauth/access_token", new
                 {
 
-                    client_id = "1734189983463496",
+                    client_id = "1706235779661312",
 
-                    client_secret = "e5ad58f505c92f68e7538ad5f10796f7",
+                    client_secret = "557e810bcb102d201f1f52d7a107785e",
 
+                    redirect_uri = "https://o365flash.azurewebsites.net/home/redirect",
+#if debug
                     redirect_uri = "https://localhost:44300/home/redirect",
+#endif
 
                     code = accessCode
 
@@ -129,7 +135,7 @@ namespace o365flashDEVWeb
             {
                 string accountName = (string)(((JsonObject)account)["name"]);
 
-                if (accountName == "Datasmörj")
+                if (accountName == "stebra")
                 {
                     pageAccessToken = (string)(((JsonObject)account)["access_token"]);
                     break;
@@ -137,15 +143,15 @@ namespace o365flashDEVWeb
             }
             var client = new FacebookClient(pageAccessToken);
             Dictionary<string, object> fbParams = new Dictionary<string, object>();
-            fbParams["message"] = "Test comment" + new Random().Next(int.MinValue, int.MaxValue).ToString();
+            fbParams["message"] = "Senaste nytt!";
 
             fbParams["link"] = submittedUrl;
             fbParams["picture"] = submittedImageUrl;
             fbParams["name"] = title;
             fbParams["caption"] = "Stebra.se";
-            fbParams["description"] = "​En fin eftermiddag";
+            fbParams["description"] = "​";
 
-            var publishedResponse = client.Post("/datasmorj/feed", fbParams);
+            var publishedResponse = client.Post("/stebraconsulting/feed", fbParams);
             if (publishedResponse != null)
             { return true; }
             else

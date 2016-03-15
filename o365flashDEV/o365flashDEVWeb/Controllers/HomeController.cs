@@ -157,7 +157,12 @@ namespace o365flashDEVWeb.Controllers
 
             return View();//news
         }
+        public ActionResult Callback()
+        {
+            ViewBag.Message = "Your callback page.";
 
+            return View();
+        }
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

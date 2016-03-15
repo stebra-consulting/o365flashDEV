@@ -236,9 +236,12 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\Post.png" />
+    <Content Include="Images\PostAzure.png" />
     <Content Include="Images\postLinkedin.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\o365flash - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\o365flash - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -261,6 +264,7 @@
     <Content Include="Views\Home\Publish.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Web.config" />
+    <Content Include="Views\Home\Callback.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

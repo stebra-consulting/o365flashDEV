@@ -47,9 +47,8 @@
     <Content Include="AppIcon.png">
       <OpcRelationship>manifest-icon</OpcRelationship>
     </Content>
-    <Content Include="RibbonCustomAction1\Elements.xml">
+    <Content Include="Post_with_Newsflash\Elements.xml">
       <OpcRelationship>feature-elementmanifest</OpcRelationship>
-      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -71,8 +70,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="RibbonCustomAction1\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{69949ea3-31c5-4dfa-a8dd-ae6e7f87b5f9}</SharePointProjectItemId>
+    <None Include="Post_with_Newsflash\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{ab89d661-3c14-46ce-9603-f774c237f95a}</SharePointProjectItemId>
     </None>
   </ItemGroup>
   <ItemGroup>
