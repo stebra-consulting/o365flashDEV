@@ -82,7 +82,12 @@ namespace o365flashDEVWeb
 
             title = UrlManager.ConvertSpecialCharacters(title); //htmlencode å, ä ö ...
 
-            string companyId = "2414183";
+            string companyId = "5032339"; //Stebra Consulting
+#if DEBUG
+            companyId = "2414183"; //Devtest co at linkedin
+#endif
+
+
             string linkedinSharesEndPoint = "https://api.linkedin.com/v1/companies/" + companyId + "/shares?oauth2_access_token={0}";
 
             string accessToken = HttpContext.Current.Session["AccessToken"].ToString() + "&format=json HTTP / 1.1";
