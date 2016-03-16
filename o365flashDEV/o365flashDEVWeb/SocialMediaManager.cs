@@ -11,7 +11,7 @@ namespace o365flashDEVWeb
 {
     public static class SocialMediaManager
     {
-        public static int postCount = 0;
+
         public static void loginToLinkedIn()
         {
             var oauth2_Url = "https://www.linkedin.com/uas/oauth2/";
@@ -79,8 +79,8 @@ namespace o365flashDEVWeb
         public static bool PostToLinkedIn(string title, string submittedUrl, string submittedImageUrl)
         {
 
-            postCount++;
-            var comment = "Senaste nytt! " + postCount.ToString(); //postCount for dev purposes, can we post 2 post in same application call?
+
+            title = UrlManager.ConvertSpecialCharacters(title); //htmlencode å, ä ö ...
 
             string companyId = "2414183";
             string linkedinSharesEndPoint = "https://api.linkedin.com/v1/companies/" + companyId + "/shares?oauth2_access_token={0}";
@@ -90,7 +90,7 @@ namespace o365flashDEVWeb
             var requestUrl = String.Format(linkedinSharesEndPoint, accessToken);
             var message = new
             {
-                comment = comment,
+                comment = "Senaste nytt!",
                 content = new Dictionary<string, string>
         {
             { "title", title },
@@ -103,7 +103,11 @@ namespace o365flashDEVWeb
                 }
             };
 
+          
+
             var requestJson = new JavaScriptSerializer().Serialize(message);
+
+ 
 
             var client = new WebClient();
             var requestHeaders = new NameValueCollection
