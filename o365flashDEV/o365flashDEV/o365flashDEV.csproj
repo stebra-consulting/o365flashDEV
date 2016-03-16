@@ -22,7 +22,7 @@
     <WorkflowPartId>{69d96ecf-2025-4794-bcb8-0a9c765918f5}</WorkflowPartId>
     <CspkgPartId>{0f140037-e98b-42e3-b423-3ee4f8068066}</CspkgPartId>
     <SqlPackagePartId>{57ad910d-2681-4672-9a81-a1cade5b43dc}</SqlPackagePartId>
-    <ActivePublishProfile>o365flash - Web Deploy</ActivePublishProfile>
+    <ActivePublishProfile>o365flash - Web Deploy %282%29</ActivePublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
